@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="description" content="لعبة XO متعددة اللاعبين - تحدي أصدقائك في لعبة الذكاء">
+    <meta name="theme-color" content="#0a0a0a">
+    <title>XO Master | لعبة العباقرة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 51, 102, 0.3), transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(0, 204, 255, 0.3), transparent 50%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .app-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 550px;
+            margin: 0 auto;
+        }
+
+        .game-card {
+            background: rgba(20, 20, 30, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 48px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Secret Bot Button */
+        .secret-bot-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 51, 102, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 999;
+            opacity: 0.1;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 51, 102, 0.2);
+        }
+
+        .secret-bot-btn:hover {
+            opacity: 0.5;
+            transform: scale(1.1);
+        }
+
+        .secret-bot-btn i {
+            color: #ff3366;
+            font-size: 1.2rem;
+        }
+
+        /* Bot Mode Indicator */
+        .bot-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ff3366, #cc0033);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 28px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            z-index: 999;
+            animation: pulse 1s infinite;
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.5);
+        }
+
+        .bot-indicator.show {
+            display: flex;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .game-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .game-icon {
+            font-size: 3rem;
+            margin-bottom: 8px;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .game-title {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff, #ff3366, #00ccff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .room-section {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 32px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .room-controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .room-input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .room-input {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 28px;
+            font-size: 1.1rem;
+            font-family: 'Poppins', monospace;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: 4px;
+            transition: all 0.3s ease;
+            color: white;
+            direction: ltr;
+        }
+
+        .room-input:focus {
+            outline: none;
+            border-color: #ff3366;
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.3);
+        }
+
+        .btn {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 28px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00ccff, #0099cc);
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 204, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #ff3366, #cc0033);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 51, 102, 0.3);
+        }
+
+        .room-code-display {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 28px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 51, 102, 0.3);
+        }
+
+        .room-code-display strong {
+            color: #00ccff;
+            font-size: 1.6rem;
+            font-family: monospace;
+            letter-spacing: 6px;
+            display: inline-block;
+            margin-top: 8px;
+            font-weight: 800;
+            text-shadow: 0 0 10px rgba(0, 204, 255, 0.5);
+        }
+
+        .players-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .player-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 28px;
+            padding: 18px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .player-card.active {
+            border-color: #ff3366;
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .player-symbol {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 12px;
+        }
+
+        .player-card:first-child .player-symbol {
+            color: #00ccff;
+        }
+
+        .player-card:last-child .player-symbol {
+            color: #ff3366;
+        }
+
+        .player-name {
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .player-status {
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .status-ready {
+            background: rgba(0, 204, 255, 0.2);
+            color: #00ccff;
+        }
+
+        .status-waiting {
+            background: rgba(255, 51, 102, 0.2);
+            color: #ff3366;
+        }
+
+        .status-bot {
+            background: linear-gradient(135deg, #ff3366, #cc0033);
+            color: white;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cell:active {
+            transform: scale(0.95);
+        }
+
+        .cell.x-move {
+            color: #00ccff;
+            text-shadow: 0 0 20px rgba(0, 204, 255, 0.5);
+        }
+
+        .cell.o-move {
+            color: #ff3366;
+            text-shadow: 0 0 20px rgba(255, 51, 102, 0.5);
+        }
+
+        .cell.winner-highlight {
+            background: linear-gradient(135deg, rgba(0, 204, 255, 0.3), rgba(255, 51, 102, 0.3));
+            animation: winPulse 0.6s ease;
+        }
+
+        @keyframes winPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .status-section {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 28px;
+            padding: 18px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .game-status {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .turn-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 8px;
+            padding: 8px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .waiting-area {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 28px;
+            padding: 48px 24px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .waiting-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(255, 51, 102, 0.2);
+            border-top-color: #ff3366;
+            border-right-color: #00ccff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .waiting-text {
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+
+        .reset-btn, .leave-btn {
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .reset-btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .leave-btn {
+            background: rgba(255, 51, 102, 0.2);
+            color: #ff3366;
+            border: 1px solid rgba(255, 51, 102, 0.3);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .neon-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(0, 204, 255, 0.2);
+            border-top-color: #00ccff;
+            border-right-color: #ff3366;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @media (max-width: 480px) {
+            .game-card {
+                padding: 18px;
+            }
+            .game-title {
+                font-size: 1.5rem;
+            }
+            .cell {
+                font-size: 2rem;
+            }
+            .room-code-display strong {
+                font-size: 1.2rem;
+            }
+            .secret-bot-btn {
+                opacity: 0.05;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <!-- Hidden Secret Bot Button -->
+    <div class="secret-bot-btn" id="secretBotBtn" title="Developer Mode">
+        <i class="fas fa-robot"></i>
+    </div>
+    
+    <!-- Bot Mode Indicator -->
+    <div class="bot-indicator" id="botIndicator">
+        <i class="fas fa-robot"></i>
+        <span>BOT MODE ACTIVE - BOT WILL FIGHT OPPONENT</span>
+    </div>
+    
+    <div class="app-container">
+        <div class="game-card">
+            <div class="game-header">
+                <div class="game-icon">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <h1 class="game-title">XO MASTER</h1>
+                <p class="subtitle">CHALLENGE YOUR FRIENDS</p>
+            </div>
+
+            <div id="lobbyView">
+                <div class="room-section">
+                    <div class="section-label">
+                        <i class="fas fa-gamepad"></i> GAME ROOM
+                    </div>
+                    <div class="room-controls">
+                        <div class="room-input-wrapper">
+                            <input type="tel" id="roomCodeInput" class="room-input" placeholder="000000" maxlength="6" autocomplete="off" inputmode="numeric">
+                        </div>
+                        <button id="joinGameBtn" class="btn btn-primary">
+                            <i class="fas fa-door-open"></i> JOIN
+                        </button>
+                    </div>
+                    <div class="room-controls">
+                        <button id="createGameBtn" class="btn btn-secondary" style="width: 100%;">
+                            <i class="fas fa-plus-circle"></i> CREATE ROOM
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="gameView" style="display: none;">
+                <div class="room-code-display">
+                    <span><i class="fas fa-hashtag"></i> ROOM CODE</span>
+                    <br>
+                    <strong id="roomCodeValue">------</strong>
+                </div>
+                
+                <div class="players-section">
+                    <div class="player-card" id="playerXCard">
+                        <div class="player-symbol">X</div>
+                        <div class="player-name" id="playerXName">PLAYER X</div>
+                        <div class="player-status" id="playerXStatus">WAITING...</div>
+                    </div>
+                    <div class="player-card" id="playerOCard">
+                        <div class="player-symbol">O</div>
+                        <div class="player-name" id="playerOName">PLAYER O</div>
+                        <div class="player-status" id="playerOStatus">WAITING...</div>
+                    </div>
+                </div>
+
+                <div id="waitingContainer" style="display: none;">
+                    <div class="waiting-area">
+                        <div class="waiting-spinner"></div>
+                        <div class="waiting-text">
+                            <i class="fas fa-users"></i> WAITING FOR PLAYER
+                        </div>
+                        <div class="waiting-hint">Share room code with your friend</div>
+                    </div>
+                </div>
+
+                <div id="boardContainer" style="display: none;">
+                    <div class="game-board" id="gameBoard"></div>
+                    
+                    <div class="status-section">
+                        <div class="game-status" id="gameStatus">
+                            <i class="fas fa-play"></i> IN GAME
+                        </div>
+                        <div class="turn-indicator" id="turnIndicator">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>TURN</span>
+                            <strong id="turnSymbol">X</strong>
+                        </div>
+                    </div>
+
+                    <button id="resetGameBtn" class="btn reset-btn">
+                        <i class="fas fa-sync-alt"></i> NEW ROUND
+                    </button>
+                    <button id="leaveGameBtn" class="btn leave-btn">
+                        <i class="fas fa-sign-out-alt"></i> LEAVE ROOM
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="neon-spinner"></div>
+            <div class="loading-text">CONNECTING...</div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+        import { getDatabase, ref, set, onValue, update, get, child } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDynVoQRSD9icEcXfEz8Fdjms-sNd9gz9Y",
+            authDomain: "xogame-a4254.firebaseapp.com",
+            projectId: "xogame-a4254",
+            storageBucket: "xogame-a4254.firebasestorage.app",
+            messagingSenderId: "961834791643",
+            appId: "1:961834791643:web:4916dd3cd8fa577d2f92fe",
+            measurementId: "G-SESYRWKR5J"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        const dbRef = ref(database);
+
+        let currentRoom = null;
+        let currentPlayerId = null;
+        let mySymbol = null;
+        let gameSubscription = null;
+        let currentGameData = null;
+        let botMode = false;
+        
+        const lobbyView = document.getElementById('lobbyView');
+        const gameView = document.getElementById('gameView');
+        const roomCodeInput = document.getElementById('roomCodeInput');
+        const joinGameBtn = document.getElementById('joinGameBtn');
+        const createGameBtn = document.getElementById('createGameBtn');
+        const roomCodeValue = document.getElementById('roomCodeValue');
+        const waitingContainer = document.getElementById('waitingContainer');
+        const boardContainer = document.getElementById('boardContainer');
+        const gameBoard = document.getElementById('gameBoard');
+        const gameStatus = document.getElementById('gameStatus');
+        const turnIndicator = document.getElementById('turnIndicator');
+        const turnSymbol = document.getElementById('turnSymbol');
+        const resetGameBtn = document.getElementById('resetGameBtn');
+        const leaveGameBtn = document.getElementById('leaveGameBtn');
+        const playerXName = document.getElementById('playerXName');
+        const playerOName = document.getElementById('playerOName');
+        const playerXStatus = document.getElementById('playerXStatus');
+        const playerOStatus = document.getElementById('playerOStatus');
+        const playerXCard = document.getElementById('playerXCard');
+        const playerOCard = document.getElementById('playerOCard');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const secretBotBtn = document.getElementById('secretBotBtn');
+        const botIndicator = document.getElementById('botIndicator');
+
+        let boardCells = [];
+
+        // Advanced AI Bot Algorithm - Minimax with Alpha-Beta Pruning
+        class TicTacToeBot {
+            constructor(difficulty = 'hard') {
+                this.difficulty = difficulty;
+            }
+
+            getBestMove(board, botSymbol) {
+                const playerSymbol = botSymbol === 'X' ? 'O' : 'X';
+                return this.minimax(board, botSymbol, playerSymbol).index;
+            }
+
+            minimax(board, botSymbol, playerSymbol, isMaximizing = true, depth = 0) {
+                const winner = this.checkWinnerForAI(board);
+                
+                if (winner === botSymbol) return { score: 10 - depth };
+                if (winner === playerSymbol) return { score: -10 + depth };
+                if (this.isBoardFull(board)) return { score: 0 };
+                
+                if (isMaximizing) {
+                    let best = { score: -Infinity };
+                    for (let i = 0; i < 9; i++) {
+                        if (board[i] === '') {
+                            board[i] = botSymbol;
+                            const result = this.minimax(board, botSymbol, playerSymbol, false, depth + 1);
+                            board[i] = '';
+                            if (result.score > best.score) {
+                                best = { score: result.score, index: i };
+                            }
+                        }
+                    }
+                    return best;
+                } else {
+                    let best = { score: Infinity };
+                    for (let i = 0; i < 9; i++) {
+                        if (board[i] === '') {
+                            board[i] = playerSymbol;
+                            const result = this.minimax(board, botSymbol, playerSymbol, true, depth + 1);
+                            board[i] = '';
+                            if (result.score < best.score) {
+                                best = { score: result.score, index: i };
+                            }
+                        }
+                    }
+                    return best;
+                }
+            }
+
+            checkWinnerForAI(board) {
+                const winPatterns = [
+                    [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                    [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                    [0, 4, 8], [2, 4, 6]
+                ];
+                
+                for (const pattern of winPatterns) {
+                    if (board[pattern[0]] && 
+                        board[pattern[0]] === board[pattern[1]] && 
+                        board[pattern[0]] === board[pattern[2]]) {
+                        return board[pattern[0]];
+                    }
+                }
+                return null;
+            }
+
+            isBoardFull(board) {
+                return board.every(cell => cell !== '');
+            }
+        }
+
+        const bot = new TicTacToeBot('hard');
+
+        function showLoading(show) {
+            loadingOverlay.style.display = show ? 'flex' : 'none';
+        }
+
+        function showToast(message, duration = 2500) {
+            const toast = document.getElementById('toast');
+            toast.innerHTML = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, duration);
+        }
+
+        function generateRoomCode() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        function getPlayerId() {
+            let id = localStorage.getItem('xo_player_id');
+            if (!id) {
+                id = 'player_' + Date.now() + '_' + Math.random().toString(36).substring(2);
+                localStorage.setItem('xo_player_id', id);
+            }
+            return id;
+        }
+
+        function createBoardUI() {
+            gameBoard.innerHTML = '';
+            boardCells = [];
+            for (let i = 0; i < 9; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.dataset.index = i;
+                cell.addEventListener('click', () => handleMove(i));
+                gameBoard.appendChild(cell);
+                boardCells.push(cell);
+            }
+        }
+
+        function updateBoardUI(board) {
+            board.forEach((value, index) => {
+                if (boardCells[index]) {
+                    boardCells[index].textContent = value;
+                    boardCells[index].classList.remove('x-move', 'o-move', 'winner-highlight');
+                    if (value === 'X') boardCells[index].classList.add('x-move');
+                    if (value === 'O') boardCells[index].classList.add('o-move');
+                }
+            });
+        }
+
+        function highlightWinningCells(board, winner) {
+            if (!winner || winner === 'draw') return;
+            
+            const winPatterns = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                [0, 4, 8], [2, 4, 6]
+            ];
+            
+            for (const pattern of winPatterns) {
+                if (board[pattern[0]] === winner && 
+                    board[pattern[1]] === winner && 
+                    board[pattern[2]] === winner) {
+                    pattern.forEach(idx => {
+                        if (boardCells[idx]) {
+                            boardCells[idx].classList.add('winner-highlight');
+                        }
+                    });
+                    break;
+                }
+            }
+        }
+
+        function checkWinner(board) {
+            const winPatterns = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                [0, 4, 8], [2, 4, 6]
+            ];
+            
+            for (const pattern of winPatterns) {
+                if (board[pattern[0]] && 
+                    board[pattern[0]] === board[pattern[1]] && 
+                    board[pattern[0]] === board[pattern[2]]) {
+                    return board[pattern[0]];
+                }
+            }
+            return board.every(cell => cell !== '') ? 'draw' : null;
+        }
+
+        async function botMove() {
+            if (!botMode || !currentRoom || !currentGameData) return;
+            if (currentGameData.winner) return;
+            
+            // Bot plays as the OPPONENT (not the player who activated the bot)
+            // If I am X, bot plays as O (opponent)
+            // If I am O, bot plays as X (opponent)
+            const botSymbol = mySymbol === 'X' ? 'O' : 'X';
+            
+            // Check if it's bot's turn
+            if (currentGameData.turn !== botSymbol) return;
+            
+            // Get best move from AI
+            const board = [...currentGameData.board];
+            const bestMove = bot.getBestMove(board, botSymbol);
+            
+            if (bestMove !== undefined && board[bestMove] === '') {
+                // Simulate realistic delay
+                setTimeout(async () => {
+                    if (!currentGameData || currentGameData.winner) return;
+                    if (currentGameData.turn !== botSymbol) return;
+                    
+                    const newBoard = [...currentGameData.board];
+                    newBoard[bestMove] = botSymbol;
+                    
+                    const winner = checkWinner(newBoard);
+                    
+                    const updates = {
+                        board: newBoard,
+                        turn: botSymbol === 'X' ? 'O' : 'X',
+                        lastMove: Date.now()
+                    };
+                    
+                    if (winner) {
+                        updates.winner = winner;
+                        updates.status = 'finished';
+                        
+                        // Show different messages based on who won
+                        if (winner === mySymbol) {
+                            showToast('🎉 You defeated the BOT! Amazing! 🎉');
+                        } else if (winner === botSymbol) {
+                            showToast('🤖 BOT defeated your opponent! Be careful! 🤖');
+                        }
+                    }
+                    
+                    await update(ref(database, `games/${currentRoom}`), updates);
+                }, 600);
+            }
+        }
+
+        async function handleMove(index) {
+            if (!currentGameData || !mySymbol) return;
+            if (currentGameData.winner) {
+                showToast('Game Over! Start new round');
+                return;
+            }
+            if (currentGameData.turn !== mySymbol) {
+                showToast('Not your turn!');
+                return;
+            }
+            if (currentGameData.board[index] !== '') {
+                showToast('Position taken!');
+                return;
+            }
+            
+            const newBoard = [...currentGameData.board];
+            newBoard[index] = mySymbol;
+            
+            const winner = checkWinner(newBoard);
+            
+            const updates = {
+                board: newBoard,
+                turn: mySymbol === 'X' ? 'O' : 'X',
+                lastMove: Date.now()
+            };
+            
+            if (winner) {
+                updates.winner = winner;
+                updates.status = 'finished';
+            }
+            
+            try {
+                await update(ref(database, `games/${currentRoom}`), updates);
+            } catch (error) {
+                console.error('Move error:', error);
+                showToast('Error, try again');
+            }
+        }
+
+        async function resetCurrentGame() {
+            if (!currentRoom) return;
+            showLoading(true);
+            const resetData = {
+                board: ['', '', '', '', '', '', '', '', ''],
+                turn: 'X',
+                winner: null,
+                status: 'playing',
+                lastMove: Date.now()
+            };
+            try {
+                await update(ref(database, `games/${currentRoom}`), resetData);
+                showToast('New round started!');
+            } catch (error) {
+                showToast('Error restarting game');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function leaveRoom() {
+            if (currentRoom && currentPlayerId && mySymbol) {
+                try {
+                    const roomRef = ref(database, `games/${currentRoom}`);
+                    const updateData = {};
+                    if (mySymbol === 'X') {
+                        updateData['playerX'] = null;
+                    } else {
+                        updateData['playerO'] = null;
+                    }
+                    updateData.status = 'waiting';
+                    updateData.winner = null;
+                    updateData.turn = 'X';
+                    updateData.board = ['', '', '', '', '', '', '', '', ''];
+                    await update(roomRef, updateData);
+                } catch (error) {
+                    console.error('Leave room error:', error);
+                }
+            }
+            if (gameSubscription) {
+                gameSubscription();
+                gameSubscription = null;
+            }
+            currentRoom = null;
+            currentGameData = null;
+            mySymbol = null;
+            lobbyView.style.display = 'block';
+            gameView.style.display = 'none';
+            waitingContainer.style.display = 'none';
+            boardContainer.style.display = 'none';
+            showToast('Left room');
+        }
+
+        function updateUIWithGameData(data) {
+            if (!data) return;
+            currentGameData = data;
+            
+            if (data.playerX || data.playerO) {
+                const isPlayerX = data.playerX === currentPlayerId;
+                const isPlayerO = data.playerO === currentPlayerId;
+                
+                // Determine if a slot is controlled by bot
+                const isBotX = botMode && data.playerX && data.playerX.toString().startsWith('bot_');
+                const isBotO = botMode && data.playerO && data.playerO.toString().startsWith('bot_');
+                
+                if (data.playerX) {
+                    if (isBotX) {
+                        playerXName.textContent = '🤖 BOT X 🤖';
+                        playerXStatus.textContent = 'BOT';
+                        playerXStatus.className = 'player-status status-bot';
+                    } else {
+                        playerXName.textContent = isPlayerX ? 'YOU (X)' : 'OPPONENT (X)';
+                        playerXStatus.textContent = 'ONLINE';
+                        playerXStatus.className = 'player-status status-ready';
+                    }
+                } else {
+                    playerXName.textContent = 'PLAYER X';
+                    playerXStatus.textContent = 'WAITING';
+                    playerXStatus.className = 'player-status status-waiting';
+                }
+                
+                if (data.playerO) {
+                    if (isBotO) {
+                        playerOName.textContent = '🤖 BOT O 🤖';
+                        playerOStatus.textContent = 'BOT';
+                        playerOStatus.className = 'player-status status-bot';
+                    } else {
+                        playerOName.textContent = isPlayerO ? 'YOU (O)' : 'OPPONENT (O)';
+                        playerOStatus.textContent = 'ONLINE';
+                        playerOStatus.className = 'player-status status-ready';
+                    }
+                } else {
+                    playerOName.textContent = 'PLAYER O';
+                    playerOStatus.textContent = 'WAITING';
+                    playerOStatus.className = 'player-status status-waiting';
+                }
+                
+                if (isPlayerX) playerXCard.classList.add('active');
+                else playerXCard.classList.remove('active');
+                
+                if (isPlayerO) playerOCard.classList.add('active');
+                else playerOCard.classList.remove('active');
+            }
+            
+            if (data.board) updateBoardUI(data.board);
+            
+            const bothPlayersReady = data.playerX && data.playerO;
+            
+            if (bothPlayersReady) {
+                waitingContainer.style.display = 'none';
+                boardContainer.style.display = 'block';
+                
+                if (data.winner) {
+                    if (data.winner === 'draw') {
+                        gameStatus.innerHTML = '<i class="fas fa-handshake"></i> DRAW!';
+                        turnIndicator.style.display = 'none';
+                    } else {
+                        const isWinner = (data.winner === 'X' && data.playerX === currentPlayerId) ||
+                                       (data.winner === 'O' && data.playerO === currentPlayerId);
+                        
+                        const isBotWinner = (data.winner === 'X' && data.playerX && data.playerX.toString().startsWith('bot_')) ||
+                                          (data.winner === 'O' && data.playerO && data.playerO.toString().startsWith('bot_'));
+                        
+                        if (isBotWinner) {
+                            gameStatus.innerHTML = '<i class="fas fa-robot"></i> BOT WINS! <i class="fas fa-robot"></i>';
+                        } else {
+                            gameStatus.innerHTML = isWinner ? '<i class="fas fa-trophy"></i> VICTORY!' : '<i class="fas fa-skull"></i> DEFEAT!';
+                        }
+                        turnIndicator.style.display = 'none';
+                        highlightWinningCells(data.board, data.winner);
+                    }
+                } else {
+                    gameStatus.innerHTML = '<i class="fas fa-play"></i> IN GAME';
+                    turnIndicator.style.display = 'inline-flex';
+                    turnSymbol.textContent = data.turn;
+                    const isMyTurn = data.turn === mySymbol;
+                    if (isMyTurn) {
+                        turnIndicator.style.background = 'rgba(0, 204, 255, 0.2)';
+                        turnIndicator.style.border = '1px solid #00ccff';
+                    } else {
+                        turnIndicator.style.background = 'rgba(255, 51, 102, 0.2)';
+                        turnIndicator.style.border = '1px solid #ff3366';
+                    }
+                    
+                    // Trigger bot move if bot mode is active and it's bot's turn
+                    if (botMode && !data.winner) {
+                        const botSymbol = mySymbol === 'X' ? 'O' : 'X';
+                        if (data.turn === botSymbol) {
+                            botMove();
+                        }
+                    }
+                }
+            } else {
+                waitingContainer.style.display = 'block';
+                boardContainer.style.display = 'none';
+            }
+        }
+
+        async function createGame() {
+            showLoading(true);
+            const roomCode = generateRoomCode();
+            const playerId = getPlayerId();
+            
+            const gameRef = ref(database, `games/${roomCode}`);
+            
+            try {
+                const snapshot = await get(child(dbRef, `games/${roomCode}`));
+                if (snapshot.exists()) {
+                    showToast('Error creating room');
+                    showLoading(false);
+                    return;
+                }
+                
+                let gameData;
+                
+                if (botMode) {
+                    // Create bot as the opponent (O player)
+                    const botId = 'bot_' + Date.now() + '_' + Math.random().toString(36).substring(2);
+                    gameData = {
+                        roomCode: roomCode,
+                        playerX: playerId,  // I am X
+                        playerO: botId,      // Bot is O (opponent)
+                        board: ['', '', '', '', '', '', '', '', ''],
+                        turn: 'X', // I start first
+                        winner: null,
+                        status: 'playing',
+                        createdAt: Date.now(),
+                        lastMove: Date.now(),
+                        botMode: true
+                    };
+                    showToast('🤖 BOT MODE: Bot will fight against you! 🤖', 3000);
+                } else {
+                    gameData = {
+                        roomCode: roomCode,
+                        playerX: playerId,
+                        playerO: null,
+                        board: ['', '', '', '', '', '', '', '', ''],
+                        turn: 'X',
+                        winner: null,
+                        status: 'waiting',
+                        createdAt: Date.now(),
+                        lastMove: Date.now(),
+                        botMode: false
+                    };
+                    showToast(`✅ Room created! Code: ${roomCode}`);
+                }
+                
+                await set(gameRef, gameData);
+                currentRoom = roomCode;
+                currentPlayerId = playerId;
+                mySymbol = 'X';
+                setupGameListener(roomCode);
+                
+            } catch (error) {
+                console.error('Create game error:', error);
+                showToast('Error creating room');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function joinGame() {
+            let roomCode = roomCodeInput.value.trim();
+            
+            if (!roomCode || roomCode.length !== 6) {
+                showToast('⚠️ Enter 6-digit room code');
+                return;
+            }
+            
+            if (!/^\d+$/.test(roomCode)) {
+                showToast('⚠️ Numbers only');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                const snapshot = await get(child(dbRef, `games/${roomCode}`));
+                if (!snapshot.exists()) {
+                    showToast('❌ Room not found');
+                    showLoading(false);
+                    return;
+                }
+                
+                const gameData = snapshot.val();
+                const playerId = getPlayerId();
+                
+                // Check if room has bot mode active
+                if (gameData.botMode) {
+                    // If joining a bot room, you become the opponent
+                    if (gameData.playerX && gameData.playerX.toString().startsWith('bot_')) {
+                        // Bot is X, you become O
+                        if (!gameData.playerO) {
+                            await update(ref(database, `games/${roomCode}`), {
+                                playerO: playerId,
+                                status: 'playing'
+                            });
+                            currentRoom = roomCode;
+                            currentPlayerId = playerId;
+                            mySymbol = 'O';
+                            setupGameListener(roomCode);
+                            showToast(`✅ Joined as O against BOT!`);
+                            showLoading(false);
+                            return;
+                        }
+                    } else if (gameData.playerO && gameData.playerO.toString().startsWith('bot_')) {
+                        // Bot is O, you become X
+                        if (!gameData.playerX) {
+                            await update(ref(database, `games/${roomCode}`), {
+                                playerX: playerId,
+                                status: 'playing'
+                            });
+                            currentRoom = roomCode;
+                            currentPlayerId = playerId;
+                            mySymbol = 'X';
+                            setupGameListener(roomCode);
+                            showToast(`✅ Joined as X against BOT!`);
+                            showLoading(false);
+                            return;
+                        }
+                    }
+                }
+                
+                // Normal join logic
+                if (gameData.playerX === playerId) {
+                    currentRoom = roomCode;
+                    currentPlayerId = playerId;
+                    mySymbol = 'X';
+                    setupGameListener(roomCode);
+                    showToast(`✅ Welcome back!`);
+                    showLoading(false);
+                    return;
+                }
+                
+                if (gameData.playerO === playerId) {
+                    currentRoom = roomCode;
+                    currentPlayerId = playerId;
+                    mySymbol = 'O';
+                    setupGameListener(roomCode);
+                    showToast(`✅ Welcome back!`);
+                    showLoading(false);
+                    return;
+                }
+                
+                if (!gameData.playerO && gameData.status !== 'finished') {
+                    await update(ref(database, `games/${roomCode}`), {
+                        playerO: playerId,
+                        status: 'playing'
+                    });
+                    currentRoom = roomCode;
+                    currentPlayerId = playerId;
+                    mySymbol = 'O';
+                    setupGameListener(roomCode);
+                    showToast(`✅ Joined as O!`);
+                } else if (!gameData.playerX && gameData.status !== 'finished') {
+                    await update(ref(database, `games/${roomCode}`), {
+                        playerX: playerId,
+                        status: 'playing'
+                    });
+                    currentRoom = roomCode;
+                    currentPlayerId = playerId;
+                    mySymbol = 'X';
+                    setupGameListener(roomCode);
+                    showToast(`✅ Joined as X!`);
+                } else {
+                    showToast('❌ Room is full');
+                }
+            } catch (error) {
+                console.error('Join game error:', error);
+                showToast('Error joining room');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function setupGameListener(roomCode) {
+            if (gameSubscription) gameSubscription();
+            
+            const gameRef = ref(database, `games/${roomCode}`);
+            gameSubscription = onValue(gameRef, (snapshot) => {
+                const data = snapshot.val();
+                if (!data) {
+                    showToast('Game ended');
+                    leaveRoom();
+                    return;
+                }
+                currentGameData = data;
+                updateUIWithGameData(data);
+            }, (error) => {
+                console.error('Listener error:', error);
+                showToast('Connection error');
+            });
+            
+            lobbyView.style.display = 'none';
+            gameView.style.display = 'block';
+            roomCodeValue.textContent = roomCode;
+            createBoardUI();
+        }
+
+        // Secret Bot Button - Triple click to activate
+        let clickCount = 0;
+        let clickTimer = null;
+        
+        secretBotBtn.addEventListener('click', () => {
+            clickCount++;
+            if (clickTimer) clearTimeout(clickTimer);
+            
+            if (clickCount === 3) {
+                botMode = !botMode;
+                if (botMode) {
+                    botIndicator.classList.add('show');
+                    showToast('🤖 BOT MODE ACTIVATED! Bot will fight your opponent! 🤖', 4000);
+                } else {
+                    botIndicator.classList.remove('show');
+                    showToast('Bot mode deactivated', 2000);
+                }
+                clickCount = 0;
+            }
+            
+            clickTimer = setTimeout(() => {
+                clickCount = 0;
+            }, 500);
+        });
+
+        createGameBtn.addEventListener('click', createGame);
+        joinGameBtn.addEventListener('click', joinGame);
+        resetGameBtn.addEventListener('click', resetCurrentGame);
+        leaveGameBtn.addEventListener('click', leaveRoom);
+        
+        roomCodeInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') joinGame();
+        });
+        
+        roomCodeInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/[^\d]/g, '').substring(0, 6);
+        });
+        
+        createBoardUI();
+        
+        window.addEventListener('beforeunload', () => {
+            if (currentRoom) leaveRoom();
+        });
+    </script>
+</body>
+</html>

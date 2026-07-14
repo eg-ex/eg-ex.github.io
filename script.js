@@ -1699,10 +1699,9 @@ function showLockScreen(message) {
                     ${message || 'هذه المنصة تُفتح من خلال الرابط الخاص بكل مادة فقط.<br>يرجى استخدام رابط المادة الذي حصلت عليه من معلمك للوصول إلى الاختبار.'}
                 </p>
                 <div class="social-icons" style="margin-top:26px;">
-                    <a href="https://whatsapp.com/channel/0029Vb6rrG2LdQehV1jBg22A" target="_blank" class="icon whatsapp"><i class="fab fa-whatsapp"></i></a>
-                    <a href="https://www.facebook.com/share/1EvrxveXPn/" target="_blank" class="icon facebook"><i class="fab fa-facebook"></i></a>
-                    <a href="https://youtube.com/@selahalazhary?si=XU1yeb9L40NZr9p8" target="_blank" class="icon youtube"><i class="fab fa-youtube"></i></a>
-                    <a href="https://t.me/alazher2026" target="_blank" class="icon telegram"><i class="fab fa-telegram"></i></a>
+                    <a href="https://api.whatsapp.com/send/?phone=%2B201102052489&text&type=phone_number&app_absent=0" target="_blank" class="icon whatsapp"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.facebook.com/share/p/1BxSBTL48Z/" target="_blank" class="icon facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.youtube.com/channel/UCF0L46rHth3wZGFie6xpOHQ/videos" target="_blank" class="icon youtube"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
         `;

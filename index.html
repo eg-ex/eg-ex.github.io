@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google-adsense-account" content="ca-pub-8841017843481142">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إختبارات سلاح الأزهري للمرحله الثانويه- نظام الاختبارات الإلكترونية</title>
+    <meta name="description" content="نظام متكامل للاختبارات الإلكترونية لطلبة الأزهر الشريف">
+    <meta name="keywords" content="اختبارات, الأزهر, تعليم, اختبارات إلكترونية, سلاح الأزهري">
+    <meta name="author" content="إختبارات سلاح الأزهري">
+    <link rel="icon" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhdyuIMWOk4qbKO_qCaKOHo859JMs3To_OJjpQ8u5fU0ULewA-AdNp7Izuv9PUOIOTGTUsNM6DTVVbRWKe2OEDTBcHnxOnOrCylsq_V3YhUFPqTkPJ7XOuzWzbCXKW-UnoLEwqsE8XjaHiWPZu2dC_pESia4uQOATzelupKDAUbuO1_jH2003wsgUO0PPiO/s1080/Selah%20Elazhary%20Transperant%20logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="brand-bar">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhdyuIMWOk4qbKO_qCaKOHo859JMs3To_OJjpQ8u5fU0ULewA-AdNp7Izuv9PUOIOTGTUsNM6DTVVbRWKe2OEDTBcHnxOnOrCylsq_V3YhUFPqTkPJ7XOuzWzbCXKW-UnoLEwqsE8XjaHiWPZu2dC_pESia4uQOATzelupKDAUbuO1_jH2003wsgUO0PPiO/s1080/Selah%20Elazhary%20Transperant%20logo.png" alt="شعار سلاح الأزهري">
+            <h1>إختبارات سلاح الأزهري</h1>
+        </div>
+        <div id="ad-container" class="ad-container" style="display: none;">
+            <button class="ad-close" id="ad-close">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 id="ad-title">إعلان</h3>
+            <p id="ad-description">وصف الإعلان</p>
+            <button class="btn btn-warning" id="ad-action">
+                <i class="fas fa-external-link-alt"></i> اضغط هنا
+            </button>
+        </div>
+        <div id="year-selection-container" class="year-selection">
+            <h1>جاري التحميل ...</h1>
+        </div>
+        <div id="section-selection-container" class="card" style="display: none;">
+            <div class="title-with-logo">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhdyuIMWOk4qbKO_qCaKOHo859JMs3To_OJjpQ8u5fU0ULewA-AdNp7Izuv9PUOIOTGTUsNM6DTVVbRWKe2OEDTBcHnxOnOrCylsq_V3YhUFPqTkPJ7XOuzWzbCXKW-UnoLEwqsE8XjaHiWPZu2dC_pESia4uQOATzelupKDAUbuO1_jH2003wsgUO0PPiO/s1080/Selah%20Elazhary%20Transperant%20logo.png" alt="شعار سلاح الأزهري">
+                <h2>اختر القسم</h2>
+            </div>
+            <div class="section-grid" id="section-container">
+            </div>
+        </div>
+        <div id="subject-selection-container" class="card" style="display: none;">
+            <div class="title-with-logo" id="subject-title-container">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhdyuIMWOk4qbKO_qCaKOHo859JMs3To_OJjpQ8u5fU0ULewA-AdNp7Izuv9PUOIOTGTUsNM6DTVVbRWKe2OEDTBcHnxOnOrCylsq_V3YhUFPqTkPJ7XOuzWzbCXKW-UnoLEwqsE8XjaHiWPZu2dC_pESia4uQOATzelupKDAUbuO1_jH2003wsgUO0PPiO/s1080/Selah%20Elazhary%20Transperant%20logo.png" alt="شعار سلاح الأزهري">
+                <div>
+                    <h2 id="subject-selection-title">اختر المادة الدراسية</h2>
+                    <p id="subject-grade-display" style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px;"></p>
+                </div>
+            </div>
+            <div class="section-grid" id="subject-container">
+            </div>
+        </div>
+        <div id="lesson-selection-container" class="card" style="display: none;">
+            <div class="title-with-logo" id="lesson-title-container">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhdyuIMWOk4qbKO_qCaKOHo859JMs3To_OJjpQ8u5fU0ULewA-AdNp7Izuv9PUOIOTGTUsNM6DTVVbRWKe2OEDTBcHnxOnOrCylsq_V3YhUFPqTkPJ7XOuzWzbCXKW-UnoLEwqsE8XjaHiWPZu2dC_pESia4uQOATzelupKDAUbuO1_jH2003wsgUO0PPiO/s1080/Selah%20Elazhary%20Transperant%20logo.png" alt="شعار سلاح الأزهري">
+                <h2 id="lesson-selection-title">اختر الدرس</h2>
+            </div>
+            <div class="lesson-grid" id="lesson-container">
+            </div>
+        </div>
+        <div id="sublesson-selection-container" class="card" style="display: none;">
+            <div class="title-with-logo" id="sublesson-title-container">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhdyuIMWOk4qbKO_qCaKOHo859JMs3To_OJjpQ8u5fU0ULewA-AdNp7Izuv9PUOIOTGTUsNM6DTVVbRWKe2OEDTBcHnxOnOrCylsq_V3YhUFPqTkPJ7XOuzWzbCXKW-UnoLEwqsE8XjaHiWPZu2dC_pESia4uQOATzelupKDAUbuO1_jH2003wsgUO0PPiO/s1080/Selah%20Elazhary%20Transperant%20logo.png" alt="شعار سلاح الأزهري">
+                <h2 id="sublesson-selection-title">اختر القسم الفرعي</h2>
+            </div>
+            <div class="sublesson-grid" id="sublesson-container">
+            </div>
+        </div>
+        <div class="quiz-container" id="quiz-container" style="display: none;">
+            <div class="loading-overlay" id="quiz-loading">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhdyuIMWOk4qbKO_qCaKOHo859JMs3To_OJjpQ8u5fU0ULewA-AdNp7Izuv9PUOIOTGTUsNM6DTVVbRWKe2OEDTBcHnxOnOrCylsq_V3YhUFPqTkPJ7XOuzWzbCXKW-UnoLEwqsE8XjaHiWPZu2dC_pESia4uQOATzelupKDAUbuO1_jH2003wsgUO0PPiO/s1080/Selah%20Elazhary%20Transperant%20logo.png" alt="شعار سلاح الأزهري" class="rotating-logo">
+                <div class="loading-text-splash">جاري تحميل اختبارات <span id="splash-subject-name"></span><span class="loading-dots-splash"></span></div>
+                <div class="loading-subtext-splash" id="splash-grade-info">نظام إختبارات سلاح الأزهري - التعليم الذكي</div>
+            </div>
+            <div class="quiz-header">
+                <h2 id="quiz-title">اختبار إختبارات سلاح الأزهري</h2>
+                <div class="timer" id="timer">
+                    <i class="fas fa-clock"></i>
+                    <span>الوقت المتبقي: 10:00</span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+            </div>
+            <div class="category-filter" id="category-filter" style="display: none;">
+                <label for="category-select">تصفية الإختبارات حسب التصنيف:</label>
+                <select id="category-select" class="form-control">
+                    <option value="all">جميع التصنيفات</option>
+                </select>
+            </div>
+            <div id="question-container">
+            </div>
+            <div class="navigation">
+                <button class="btn btn-secondary" id="prev-btn" disabled>
+                    <i class="fas fa-arrow-right"></i> السابق
+                </button>
+                <button class="btn btn-primary" id="next-btn">
+                    التالي <i class="fas fa-arrow-left"></i>
+                </button>
+                <button class="btn btn-success" id="submit-btn" style="display: none;">
+                    <i class="fas fa-check-circle"></i> إظهار النتيجة
+                </button>
+            </div>
+        </div>
+        <div class="results-container" id="results-container">
+            <h2>تابعنا للإ طلاع علي كل جديد</h2>
+            <div class="social-icons">
+                <a href="https://whatsapp.com/channel/0029Vb6rrG2LdQehV1jBg22A" target="_blank" class="icon whatsapp"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://www.facebook.com/share/1EvrxveXPn/" target="_blank" class="icon facebook"><i class="fab fa-facebook"></i></a>
+                <a href="https://youtube.com/@selahalazhary?si=XU1yeb9L40NZr9p8" target="_blank" class="icon youtube"><i class="fab fa-youtube"></i></a>
+                <a href="https://t.me/alazher2026" target="_blank" class="icon telegram"><i class="fab fa-telegram"></i></a>
+            </div>
+            <h2>نتيجة الاختبار</h2>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="score-value">0</div>
+                    <div class="stat-label">الدرجة</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="percentage">0%</div>
+                    <div class="stat-label">النسبة المئوية</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="time-taken">00:00</div>
+                    <div class="stat-label">الوقت المستغرق</div>
+                </div>
+            </div>
+            <div class="feedback" id="feedback"></div>
+            <button class="btn btn-primary" id="restart-btn">
+                <i class="fas fa-redo"></i> إعادة الاختبار
+            </button>
+        </div>
+    </div>
+
+
+    <div class="back-btn" id="back-btn" style="display: none !important;">
+        <i class="fas fa-arrow-left"></i>
+    </div>
+
+    <div class="secure-badge">
+
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,14 +1,14 @@
 
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDo2v1boaj3i5C8SC1AZzEUFd3OqvXfiqs",
-    authDomain: "selahelazhary-67792.firebaseapp.com",
+    apiKey: "AIzaSyA21JnXTlM6qWq1wKz49Gbux2inFCiY25g",
+    authDomain: "elgohary-56840.firebaseapp.com",
     databaseURL: "https://selahelazhary-67792-default-rtdb.firebaseio.com",
-    projectId: "selahelazhary-67792",
-    storageBucket: "selahelazhary-67792",
-    messagingSenderId: "235914603020",
-    appId: "1:235914603020:web:e47c2edb9ab4534f3e9c29",
-    measurementId: "G-ZW3E2Z04QF"
+    projectId: "elgohary-56840",
+    storageBucket: "elgohary-56840.firebasestorage.app",
+    messagingSenderId: "41672086437",
+    appId: "1:41672086437:web:113a39a9bb3cd690b28e4c",
+    measurementId: "G-40K791PR05"
 };
 
 // تهيئة Firebase وإتاحة الكائنات لباقي السكربتات

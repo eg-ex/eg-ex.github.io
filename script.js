@@ -138,7 +138,7 @@ const isFromQR = sectionFromUrl !== null;
 const hasDirectLink = sectionFromUrl !== null || subjectFromUrl !== null;
 
 // اللوجو - ثابت لجميع العناوين
-const LOGO_URL = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhdyuIMWOk4qbKO_qCaKOHo859JMs3To_OJjpQ8u5fU0ULewA-AdNp7Izuv9PUOIOTGTUsNM6DTVVbRWKe2OEDTBcHnxOnOrCylsq_V3YhUFPqTkPJ7XOuzWzbCXKW-UnoLEwqsE8XjaHiWPZu2dC_pESia4uQOATzelupKDAUbuO1_jH2003wsgUO0PPiO/s1080/Selah%20Elazhary%20Transperant%20logo.png";
+const LOGO_URL = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjjevZ92-Mw2fEHsP2Gv3505g0pUqJaqDvOZ0JzPbn9fyzgWXvyUUba3PFXkvs58FSPmI3gYTV76EynpGutVQsVetuXdRsp9eQGDKS5u7YJ6II8KmlKxVjxHYbUwYWmxJ_T50mvJ03i2_5Q7yXIe-yWOjqGRq8IxLAzvm8oTbSJJi2f34sIfkcwZojjfcyG/s497/eg%20ex.jpg";
 
 // تهيئة التطبيق
 function initApp() {

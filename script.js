@@ -1,8 +1,3 @@
-// ============================================
-//  منطق تطبيق إختبارات سلاح الأزهري
-//  يعتمد على المتغيرات: app, database, auth
-//  المُعرّفة في ملف firebase-config.js (يجب تحميله قبل هذا الملف)
-// ============================================
 
 // متغيرات التطبيق
 let currentQuestionIndex = 0;
@@ -864,7 +859,7 @@ function loadSublessonsForLesson(lessonId) {
                         const subjectName = subjectObj ? subjectObj.name : '';
                         const lessonObj = lessons.find(l => l.id === selectedLesson);
                         const lessonName = lessonObj ? lessonObj.name : '';
-                        elements.quizTitle.textContent = `اختبار إختبارات سلاح الأزهري - ${yearText} - ${sectionName} - ${subjectName} - ${lessonName} - ${sublessonName}`;
+                        elements.quizTitle.textContent = `اختبارات الجوهري - ${yearText} - ${sectionName} - ${subjectName} - ${lessonName} - ${sublessonName}`;
 
                         setTimeout(() => {
                             elements.sublessonSelectionContainer.style.display = 'none';
@@ -913,7 +908,7 @@ function updateSplashScreen() {
         }
 
         if (splashGradeInfo) {
-            splashGradeInfo.textContent = 'نظام إختبارات سلاح الأزهري - التعليم الذكي';
+            splashGradeInfo.textContent = 'نظام إختبارات الجوهري - التعليم الذكي';
         }
     } catch (error) {
         console.error('خطأ في تحديث الـ Splash Screen:', error);

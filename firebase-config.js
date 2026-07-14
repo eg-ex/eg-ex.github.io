@@ -1,9 +1,8 @@
 
 
 const firebaseConfig = {
-    apiKey: "AIzaSyA21JnXTlM6qWq1wKz49Gbux2inFCiY25g",
+  apiKey: "AIzaSyA21JnXTlM6qWq1wKz49Gbux2inFCiY25g",
     authDomain: "elgohary-56840.firebaseapp.com",
-    databaseURL: "https://selahelazhary-67792-default-rtdb.firebaseio.com",
     projectId: "elgohary-56840",
     storageBucket: "elgohary-56840.firebasestorage.app",
     messagingSenderId: "41672086437",
